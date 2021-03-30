@@ -110,7 +110,8 @@ def reg_student():
     student_group = input('введите группу:')
     student_login = input('введите логин:')
     student_password = input('введите пароль:')
-    DataBase.addUser(self, student_login, student_password)
+    id = 3
+    DataBase.addUser(id, student_login, student_password)
     print(student_name, student_surname, student_fakultet, student_group, student_login, student_password)
 
 
