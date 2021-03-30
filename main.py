@@ -18,12 +18,51 @@ class DataBase:
         )
         return connection
 
+    def __del__(self):
+        self.connection.close()
+        print('connection closed')
 
-    def addUser(self, login, password):
+
+    def addUser(self, id, login, password):
         sql = "INSERT INTO users (id, login, password) VALUES (%s, %s, %s)"
-        temp = [3, login, password]
+        temp = [id, login, password]
         self.cursors.execute(sql, temp)
         self.connection.commit()
+
+
+    def getUser(self):
+        sql = "SELECT * FROM users"
+        self.cursors.execute(sql)
+        data = self.cursors.fetchall()
+        return data
+        # [{'login': 'sfsf', 'password': 'fksanks'}, {}]
+
+    def getPassword(self, login):
+        sql = "SELECT password FROM users WHERE login = %s"
+        self.cursors(sql, [login])
+        data = self.cursors.fetchall()
+        return data["password"]
+
+''' 
+def shifr(password):
+    password = password.replace('a', 2)
+    return password
+
+def deshifr(password):
+    password = password.replace(2, 'a')
+    return password
+
+
+    
+login = input()
+password = input()
+db = DataBase()
+dbPassword = db.getPassword(login)
+if password == dbPassword:
+    print("ok")
+
+'''
+
 
 
 def menu_prepoda():
@@ -32,6 +71,11 @@ def menu_prepoda():
         type = int(input('Сделайте выбор (или 0 для выхода):'))
         if type == 1:
             print('информация о студентах')
+            db = DataBase()
+            data = db.getUser()
+            for element in data:
+                print(element["login"])
+
         elif type == 2:
             print('получить информацию о студенте:')
         elif type == 3:
@@ -110,8 +154,11 @@ def reg_student():
     student_group = input('введите группу:')
     student_login = input('введите логин:')
     student_password = input('введите пароль:')
-    id = 3
-    DataBase.addUser(id, student_login, student_password)
+    id = 5
+    db = DataBase()
+    db.addUser(id, student_login, student_password)
+    del db
+    #DataBase.addUser(id, student_login, student_password)
     print(student_name, student_surname, student_fakultet, student_group, student_login, student_password)
 
 
@@ -120,7 +167,6 @@ def reg_prepod():
     prepod_surname = input('введите фамилию:')
     prepod_fakultet = input('введите факультет:')
     prepod_predmet = input('введите группу:')
-
     print(prepod_name, prepod_surname, prepod_fakultet, prepod_predmet)
 
 
@@ -153,3 +199,4 @@ def main():
         elif type == 0:
             break
 main()
+
