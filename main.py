@@ -104,10 +104,11 @@ def menu_prepoda():
             if len(data) > 0:
                 for element in data:
                     print(element["id"], element["name"], element["fakultet"], element["predmet"])
-            prepod_id = int(input('введите id преподавателя для установки логина:'))
-            db.confirmLoginToPrepod(prepod_id)
+                prepod_id = int(input('введите id преподавателя для установки логина:'))
+                db.confirmLoginToPrepod(prepod_id)
             if len(data) == 0:
                 print('нет преподавателей для добавления в БД')
+
         elif type == 5:
             print('поставить оценку')
         elif type == 6:
