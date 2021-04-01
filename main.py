@@ -23,27 +23,52 @@ class DataBase:
         print('connection closed')
 
 
-    def addUser(self, id, login, password):
-        sql = "INSERT INTO users (id, login, password) VALUES (%s, %s, %s)"
-        temp = [id, login, password]
+    def addUserStudent(self, login, password, type, name, surname, fakultet, group_number):
+        sql = "INSERT INTO usrs (id, login, password, type, name, surname, fakultet, group_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        temp = ["NULL", login, password, type, name, surname, fakultet, group_number]
         self.cursors.execute(sql, temp)
         self.connection.commit()
 
+    def addUserPrepod(self, password, type, name, surname, fakultet, predmet):
+        sql = "INSERT INTO usrs (id, password, type, name, surname, fakultet, predmet) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        temp = ["NULL", password, type, name, surname, fakultet, predmet]
+        self.cursors.execute(sql, temp)
+        self.connection.commit()
 
     def getUser(self):
-        sql = "SELECT * FROM users"
+        sql = "SELECT * FROM usrs WHERE type = 's'"
         self.cursors.execute(sql)
         data = self.cursors.fetchall()
         return data
         # [{'login': 'sfsf', 'password': 'fksanks'}, {}]
 
-    def getPassword(self, login):
-        sql = "SELECT password FROM users WHERE login = %s"
-        self.cursors(sql, [login])
+    def confirmPrepod(self):
+        sql = "SELECT * FROM usrs WHERE type = 'p' AND login = ''"
+        self.cursors.execute(sql)
         data = self.cursors.fetchall()
-        return data["password"]
+        return data
 
-''' 
+    def confirmLoginToPrepod(self, id):
+        login = "prep"+str(id)
+        sql = "UPDATE usrs SET login = %s WHERE id = %s"
+        temp = [login, id]
+        self.cursors.execute(sql, temp)
+        self.connection.commit()
+
+    def infoStudent(self, id):
+        sql = "SELECT * FROM usrs WHERE id = %s"
+        self.cursors.execute(sql, [id])
+        data = self.cursors.fetchall()
+        return data
+
+    def getPassword(self, login):
+        login = login
+        sql = "SELECT * FROM usrs WHERE login = %s"
+        self.cursors.execute(sql, [login])
+        data = self.cursors.fetchall()
+        return data
+
+
 def shifr(password):
     password = password.replace('a', 2)
     return password
@@ -51,18 +76,6 @@ def shifr(password):
 def deshifr(password):
     password = password.replace(2, 'a')
     return password
-
-
-    
-login = input()
-password = input()
-db = DataBase()
-dbPassword = db.getPassword(login)
-if password == dbPassword:
-    print("ok")
-
-'''
-
 
 
 def menu_prepoda():
@@ -74,14 +87,27 @@ def menu_prepoda():
             db = DataBase()
             data = db.getUser()
             for element in data:
-                print(element["login"])
-
+                print(element["id"], element["name"], element["surname"], element["fakultet"], element["group_number"])
         elif type == 2:
-            print('получить информацию о студенте:')
+            id = int(input('Информация о студенте, введите id:'))
+            db = DataBase()
+            data = db.infoStudent(id)
+            for element in data:
+                print(element["id"], element["name"], element["surname"], element["fakultet"], element["group_number"])
         elif type == 3:
             print('добавть студента:')
         elif type == 4:
-            print('добавить преподавателя')
+            print('--------------добавить преподавателя')
+            db = DataBase()
+            data = db.confirmPrepod()
+            print(len(data), "преподавателя(ей) можно добавить в БД:")
+            if len(data) > 0:
+                for element in data:
+                    print(element["id"], element["name"], element["fakultet"], element["predmet"])
+            prepod_id = int(input('введите id преподавателя для установки логина:'))
+            db.confirmLoginToPrepod(prepod_id)
+            if len(data) == 0:
+                print('нет преподавателей для добавления в БД')
         elif type == 5:
             print('поставить оценку')
         elif type == 6:
@@ -111,73 +137,46 @@ def menu_studenta():
             print('что-то не то нажали')
 
 
-def check_authorization(login, password):
-    if login.istitle():
-        res = 'prepod'
-    else:
-        res = 'student'
-    if res == 'prepod':  # res == True
-        id = 23
-        return 1 # 1 - препод, 2 - студент
-    if res == 'student':
-        id = 18
-        return 2 # 1 - препод, 2 - студент
-    else:
-        return False
-
-
 def hide_password(password):
     hidden_password = str('*'*len(password))
     return hidden_password
 
 
-def login(login, password):
-    print('авторизация...')
-    hidden_password = hide_password(password)
-    print(login, hidden_password)
-    res_auth = check_authorization(login, password)
-    if not res_auth: # res_auth == False
-        print('введены неверные данные, пользователя с таким паролем не существует')
-    else:
-        if res_auth == 1:
-            print('menu prepoda')
-            menu_prepoda()
-        if res_auth == 2:
-            print('menu studenta')
-            menu_studenta()
-
-
 def reg_student():
-    student_name = input('введите имя:')
-    student_surname = input('введите фамилию:')
-    student_fakultet = input('введите факультет:')
-    student_group = input('введите группу:')
+    type = "s"
+    name = input('введите имя:')
+    surname = input('введите фамилию:')
+    fakultet = input('введите факультет:')
+    group_number = input('введите группу:')
     student_login = input('введите логин:')
     student_password = input('введите пароль:')
-    id = 5
     db = DataBase()
-    db.addUser(id, student_login, student_password)
+    db.addUserStudent(student_login, student_password, type, name, surname, fakultet, group_number)
     del db
-    #DataBase.addUser(id, student_login, student_password)
-    print(student_name, student_surname, student_fakultet, student_group, student_login, student_password)
+    print("студент <", name, surname, fakultet, group_number, student_login, student_password, "> добавлен")
 
 
 def reg_prepod():
-    prepod_name = input('введите имя:')
-    prepod_surname = input('введите фамилию:')
-    prepod_fakultet = input('введите факультет:')
-    prepod_predmet = input('введите группу:')
-    print(prepod_name, prepod_surname, prepod_fakultet, prepod_predmet)
+    type = "p"
+    password = input('введите пароль:')
+    name = input('введите имя:')
+    surname = input('введите фамилию:')
+    fakultet = input('введите факультет:')
+    predmet = input('введите предмет:')
+    db = DataBase()
+    db.addUserPrepod(password, type, name, surname, fakultet, predmet)
+    del db
+    print("преподаватель", password, name, surname, fakultet, predmet, "добавлен.\nЛогин установит главный преподаватель.")
 
 
 def register():
     while True:
         member = input('введите данные: 1 - студент, 2 - преподаватель:')
         if int(member) == 1:
-            print('vy stydent')
+            print('регистрация студента')
             reg_student()
         elif int(member) == 2:
-            print('vy prepod')
+            print('регистрация преподавателя')
             reg_prepod()
         else:
             print('вы ввели неверные данные')
@@ -190,13 +189,65 @@ def main():
         type = int(input('Сделайте выбор (или 0 для выхода):'))
         if type == 1:
             print('Авторизация. Введите запрашиваемые данные:')
-            a_login = input('login:')
-            a_password = input('password:')
-            login(a_login, a_password)
+            login = input('login:')
+            password = input('password:')
+            db = DataBase()
+            data = db.getPassword(login=login)
+            for element in data:
+                print(element["password"])
+            if password == element["password"]:
+                print("...Авторизация прошла успешно,", element["name"])
+                if element["type"] == "s":
+                    menu_studenta()
+                else:
+                    menu_prepoda()
+            else:
+                print("ne ok")
         elif type == 2:
             print('Регистрация. Введите запрашиваемые данные:')
             register()
+        elif type == 3:
+            print("меню препода")
+            menu_prepoda()
+        elif type ==4:
+            print("меню студента")
+            menu_studenta()
         elif type == 0:
             break
 main()
+'''
+#--------------
 
+def check_authorization(login, password):
+    if login.istitle():
+        res = 'prepod'
+    else:
+        res = 'student'
+    if res == 'prepod':  # res == True
+        id = 23
+        return 1  # 1 - препод, 2 - студент
+    if res == 'student':
+        id = 18
+        return 2  # 1 - препод, 2 - студент
+    else:
+        return False
+
+#--------------
+
+
+def login(login, password):
+    print('авторизация...')
+    hidden_password = hide_password(password)
+    print(login, hidden_password)
+    res_auth = DataBase.check_authorization(login, password)
+    if not res_auth: # res_auth == False
+        print('введены неверные данные, пользователя с таким паролем не существует')
+    else:
+        if res_auth == 1:
+            print('menu prepoda')
+            menu_prepoda()
+        elif res_auth == 2:
+            print('menu studenta')
+            menu_studenta()
+        else: print('ооо, сложна!!!!!!!!!!!!!!!')
+'''
