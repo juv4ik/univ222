@@ -75,12 +75,12 @@ class DataBase:
         return data
 
 
-def shifr(password):
-    password = password.replace('a', 2)
+def shifr_pswrd(password):
+    password = password.replace('a','Θ').replace('b', 'Ξ').replace('c', 'Σ').replace('d', 'Ψ').replace('e', 'β').replace('f', 'γ').replace('g', 'ζ').replace('h', 'λ').replace('i', 'ξ').replace('j', 'Π').replace('k', 'Τ').replace('l', 'ƒ').replace('m', '÷').replace('n', '×').replace('o', '¼').replace('p', '¾').replace('q', '½').replace('r', '±').replace('s', '°').replace('t', '™').replace('u', '®').replace('v', '©').replace('w', '§').replace('x', '¶').replace('y', '€').replace('z', '£')
     return password
 
-def deshifr(password):
-    password = password.replace(2, 'a')
+def deshifr_pswrd(password):
+    password = password.replace('Θ', 'a').replace('Ξ', 'b').replace('Σ', 'c').replace('Ψ', 'd').replace('β', 'e').replace('γ', 'f').replace('ζ', 'g').replace('λ', 'h').replace('ξ', 'i').replace('Π', 'j').replace('Τ', 'k').replace('ƒ', 'l').replace('÷', 'm').replace('×', 'n').replace('¼', 'o').replace('¾', 'p').replace('½', 'q').replace('±', 'r').replace('°', 's').replace('™', 't').replace('®', 'u').replace('©', 'v').replace('§', 'w').replace('¶', 'x').replace('€', 'y').replace('£', 'z')
     return password
 
 
@@ -170,11 +170,11 @@ def reg_student():
     group_number = input('введите группу:')
     student_login = input('введите логин:')
     student_password = input('введите пароль:')
+    student_password = shifr_pswrd(student_password)
     db = DataBase()
     db.addUserStudent(student_login, student_password, type, name, surname, fakultet, group_number)
     del db
-    print("студент <", name, surname, fakultet, group_number, student_login, student_password, "> добавлен")
-
+    print("студент <", name, surname, fakultet, group_number, student_login, "> добавлен")
 
 
 def reg_prepod():
@@ -184,6 +184,7 @@ def reg_prepod():
     surname = input('введите фамилию:')
     fakultet = input('введите факультет:')
     predmet = input('введите предмет:')
+    password = shifr_pswrd(password)
     db = DataBase()
     db.addUserPrepod(password, type, name, surname, fakultet, predmet)
     del db
@@ -217,8 +218,9 @@ def main():
             db = DataBase()
             data = db.getPassword(login=login)
             for element in data:
-                print(element["password"])
-            if password == element["password"]:
+                pass
+                #print(element["password"])
+            if password == deshifr_pswrd(element["password"]):
                 print("...Авторизация прошла успешно,", element["name"])
                 if element["type"] == "s":
                     menu_studenta(login=login)
