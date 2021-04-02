@@ -68,6 +68,12 @@ class DataBase:
         data = self.cursors.fetchall()
         return data
 
+    def student_info_o_sebe(self, login):
+        sql = "SELECT * FROM usrs WHERE login = %s"
+        self.cursors.execute(sql, [login])
+        data = self.cursors.fetchall()
+        return data
+
 
 def shifr(password):
     password = password.replace('a', 2)
@@ -118,18 +124,31 @@ def menu_prepoda():
         else:
             print('что-то не то нажали')
 
-def menu_studenta():
+def menu_studenta(login):
+    def d():
+        db = DataBase()
+        data = db.student_info_o_sebe(login)
+        return data
     while True:
         print('1 - информация о себе\n2 - средний балл\n3 - номер группы\n4 - фио\n5 - информация о предметах\n0 - выход')
         type = int(input('Сделайте выбор (или 0 для выхода):'))
         if type == 1:
-            print('информация о себе')
+            print('информация о', login, ':')
+            data = d()
+            for element in data:
+                print(element["id"], element["name"], element["surname"], element["fakultet"], element["group_number"])
         elif type == 2:
             print('средний балл')
         elif type == 3:
             print('номер группы')
+            data = d()
+            for element in data:
+                print(element["group_number"])
         elif type == 4:
             print('фио')
+            data = d()
+            for element in data:
+                print(element["name"], element["surname"])
         elif type == 5:
             print('информация о предметах')
         elif type == 0:
@@ -157,6 +176,7 @@ def reg_student():
     print("студент <", name, surname, fakultet, group_number, student_login, student_password, "> добавлен")
 
 
+
 def reg_prepod():
     type = "p"
     password = input('введите пароль:')
@@ -179,6 +199,8 @@ def register():
         elif int(member) == 2:
             print('регистрация преподавателя')
             reg_prepod()
+        elif int(member) == 0:
+            break
         else:
             print('вы ввели неверные данные')
 
@@ -199,7 +221,7 @@ def main():
             if password == element["password"]:
                 print("...Авторизация прошла успешно,", element["name"])
                 if element["type"] == "s":
-                    menu_studenta()
+                    menu_studenta(login=login)
                 else:
                     menu_prepoda()
             else:
