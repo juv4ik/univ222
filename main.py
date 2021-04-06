@@ -27,6 +27,7 @@ def menu_studenta(login):
             db = DataBase()
             data = db.student_marks(id)
             data = data[0]
+            del db
             sum_ball = 0
             cnt = 0
             for key in data:
@@ -47,6 +48,11 @@ def menu_studenta(login):
                 print(element["name"], element["surname"])
         elif type == 5:
             print('информация о предметах: круг круглый, а квадрат квадратный')
+            db = DataBase()
+            data = db.info_predmety()
+            del db
+            for element in data:
+                print(element["predmet"],":", element["name"], element["surname"], ", факультет: ", element["fakultet"])
         elif type == 9:
             print('изменить пароль', login)
             new_password = shifr_pswrd(input('введите новый пароль (или 0 для выхода):'))
@@ -72,12 +78,14 @@ def menu_prepoda(login):
             print('информация о студентах')
             db = DataBase()
             data = db.getUser()
+            del db
             for element in data:
                 print(element["id"], element["name"], element["surname"], element["fakultet"], element["group_number"])
         elif type == 2:
             students = []
             db = DataBase()
             data = db.getUser()
+            del db
             for element in data:
                 students.append(element["id"])
             print(students)
@@ -85,6 +93,7 @@ def menu_prepoda(login):
             if id in students:
                 db = DataBase()
                 data, data2 = db.infoStudent(id)
+                del db
                 for element in data:
                     print(element["name"], element["surname"], element["fakultet"],
                           element["group_number"])
@@ -103,6 +112,7 @@ def menu_prepoda(login):
             prepods_to_confirm = []
             db = DataBase()
             data = db.confirmPrepod()
+            del db
             print(len(data), "преподавателя(ей) можно добавить в БД:")
             if len(data) > 0:
                 for element in data:
@@ -129,6 +139,7 @@ def menu_prepoda(login):
             mark = input('поставьте оценку:')
             db = DataBase()
             db.mark(login, number_pr, id, mark)
+            del db
             print('оценка поставлена')
         elif type == 6:
             number_pr = input(
@@ -141,6 +152,7 @@ def menu_prepoda(login):
             mark = input('поставить новую оценку:')
             db = DataBase()
             db.mark(login, number_pr, id, mark)
+            del db
             print('Оценка установлена')
         elif type == 0:
             break
@@ -176,6 +188,7 @@ def main():
             password = input('password:')
             db = DataBase()
             data = db.getPassword(login=login)
+            del db
             for element in data:
                 pass
                 # print(element["password"])

@@ -106,4 +106,9 @@ class DataBase:
         temp = [mark, id]
         self.cursors.execute(sql, temp)
         self.connection.commit()
-        print(login, number_pr)
+
+    def info_predmety(self):
+        sql = "SELECT * FROM usrs WHERE type = 'p'"
+        self.cursors.execute(sql)
+        data = self.cursors.fetchall()
+        return data
