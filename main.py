@@ -24,8 +24,15 @@ def menu_studenta(login):
             print('средний балл')
             db = DataBase()
             data = db.student_marks(id)
-            for element in data:
-                print(element["prep5_1"])
+            data = data[0]
+            sum_ball=0
+            cnt = 0
+            for key in data:
+                if key != 'id':
+                    if data[key] != None:
+                        sum_ball += int(data[key])
+                        cnt +=1
+            print('средний балл=', sum_ball/cnt)
         elif type == 3:
             print('номер группы')
             data = d()
