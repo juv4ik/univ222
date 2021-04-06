@@ -1,6 +1,5 @@
 from univ_fuctions.pswrd import *
-from main import DataBase
-
+from univ_fuctions.cl import *
 
 def reg_student():
     type = "s"

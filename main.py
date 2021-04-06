@@ -1,6 +1,5 @@
-import pymysql
-from pymysql.cursors import DictCursor
 from univ_fuctions.pswrd import *
+from univ_fuctions.cl import *
 #from univ_fuctions.prepod import *
 #from univ_fuctions.student import *
 #from univ_fuctions.reg import *

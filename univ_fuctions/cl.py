@@ -1,3 +1,6 @@
+import pymysql
+from pymysql.cursors import DictCursor
+
 class DataBase:
     def __init__(self):
         self.connection = self.connect()

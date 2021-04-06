@@ -24,6 +24,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\univ_fuctions\reg.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
