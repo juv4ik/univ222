@@ -1,3 +1,7 @@
+from univ_fuctions.pswrd import *
+from main import DataBase
+
+
 def reg_student():
     type = "s"
     name = input('введите имя:')
