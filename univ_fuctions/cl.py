@@ -71,7 +71,10 @@ class DataBase:
         sql = "SELECT * FROM usrs WHERE id = %s"
         self.cursors.execute(sql, [id])
         data = self.cursors.fetchall()
-        return data
+        sql2 = "SELECT * FROM marks WHERE id = %s"
+        self.cursors.execute(sql2, [id])
+        data2 = self.cursors.fetchall()
+        return data, data2
 
     def student_marks(self, id):
         sql = "SELECT * FROM marks WHERE id = %s"
