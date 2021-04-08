@@ -1,8 +1,8 @@
-from univ_fuctions.pswrd import *
-from univ_fuctions.cl import *
+#from univ_fuctions.pswrd import *
+#from univ_fuctions.cl import *
 # from univ_fuctions.prepod import *
 # from univ_fuctions.student import *
-# from univ_fuctions.reg import *
+from univ_fuctions.reg import *
 
 def menu_studenta(login):
     def d():
@@ -35,7 +35,9 @@ def menu_studenta(login):
                     if data[key] != None:
                         sum_ball += int(data[key])
                         cnt += 1
-            print('средний балл=', sum_ball / cnt)
+            if cnt > 0:
+                print('средний балл=', sum_ball / cnt)
+            else: print('ни одной оценки не поставлено.')
         elif type == 3:
             print('номер группы')
             data = d()
@@ -47,7 +49,7 @@ def menu_studenta(login):
             for element in data:
                 print(element["name"], element["surname"])
         elif type == 5:
-            print('информация о предметах: круг круглый, а квадрат квадратный')
+            print('информация о предметах:')
             db = DataBase()
             data = db.info_predmety()
             del db
@@ -72,7 +74,7 @@ def menu_studenta(login):
 def menu_prepoda(login):
     while True:
         print(
-            '1 - информация о студентах\n2 - получить информацию о студенте\n3 - добавть студента\n4 - добавить преподавателя\n5 - поставить оценку\n6 - изменить оценку\n0 - выход')
+            '1 - информация о студентах\n2 - получить информацию о студенте\n3 - добавить студента\n4 - добавить преподавателя\n5 - поставить оценку\n6 - изменить оценку\n0 - выход')
         type = int(input('Сделайте выбор (или 0 для выхода):'))
         if type == 1:
             print('информация о студентах')
@@ -118,10 +120,12 @@ def menu_prepoda(login):
                 for element in data:
                     print(element["id"], element["name"], element["fakultet"], element["predmet"])
                     prepods_to_confirm.append(element["id"])
-                print('list a:', prepods_to_confirm)
+                print('доступные варианты:', prepods_to_confirm)
                 prepod_id = int(input('введите id преподавателя для установки логина (или 0 для выхода):'))
                 if prepod_id in prepods_to_confirm:
+                    db = DataBase()
                     db.confirmLoginToPrepod(prepod_id)
+                    print('Преподаватель добавлен. Предмет добавлен.')
                 elif type == 0:
                     break
                 else:
@@ -187,19 +191,27 @@ def main():
             login = input('login:')
             password = input('password:')
             db = DataBase()
-            data = db.getPassword(login=login)
+            logins = db.getUser()
             del db
-            for element in data:
-                pass
-                # print(element["password"])
-            if password == deshifr_pswrd(element["password"]):
-                print("...Авторизация прошла успешно,", element["name"], hide_password(password))
-                if element["type"] == "s":
-                    menu_studenta(login=login)
+            logins_list = []
+            for element in logins:
+                logins_list.append(element["login"])
+            if login in logins_list:
+                db = DataBase()
+                data = db.getPassword(login=login)
+                del db
+                for element in data:
+                    pass
+                    # print(element["password"])
+                if password == deshifr_pswrd(element["password"]):
+                    print("...Авторизация прошла успешно,", element["name"], hide_password(password))
+                    if element["type"] == "s":
+                        menu_studenta(login=login)
+                    else:
+                        menu_prepoda(login=login)
                 else:
-                    menu_prepoda(login=login)
-            else:
-                print("ne ok")
+                    print("введен неверный логин или пароль")
+            else: print('нет такого логина. Вы зарегистрированы?')
         elif type == 2:
             print('Регистрация. Введите запрашиваемые данные:')
             register()

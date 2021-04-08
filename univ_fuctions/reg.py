@@ -32,7 +32,7 @@ def reg_prepod():
 
 def register():
     while True:
-        member = input('введите данные: 1 - студент, 2 - преподаватель:')
+        member = input('введите данные: 1 - студент, 2 - преподаватель (или 0 для выхода):')
         if int(member) == 1:
             print('регистрация студента')
             reg_student()
