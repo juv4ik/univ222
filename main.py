@@ -197,7 +197,7 @@ def main():
             del db
             for element in data:
                 pass
-                print(element["password"])
+                #print(element["password"])
             if password == deshifr_pswrd(element["password"]):
                 print("...Авторизация прошла успешно,", element["name"], hide_password(password))
                 if element["type"] == "s":
