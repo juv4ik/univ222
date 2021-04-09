@@ -1,9 +1,10 @@
-from univ_fuctions.cl import *
+#from univ_fuctions.pswrd import *
+#from univ_fuctions.cl import *
 
 def menu_prepoda(login):
     while True:
         print(
-            '1 - информация о студентах\n2 - получить информацию о студенте\n3 - добавть студента\n4 - добавить преподавателя\n5 - поставить оценку\n6 - изменить оценку\n0 - выход')
+            '1 - информация о студентах\n2 - получить информацию о студенте\n3 - добавить студента\n4 - добавить преподавателя\n5 - поставить оценку\n6 - изменить оценку\n0 - выход')
         type = int(input('Сделайте выбор (или 0 для выхода):'))
         if type == 1:
             print('информация о студентах')
@@ -49,10 +50,12 @@ def menu_prepoda(login):
                 for element in data:
                     print(element["id"], element["name"], element["fakultet"], element["predmet"])
                     prepods_to_confirm.append(element["id"])
-                print('list a:', prepods_to_confirm)
+                print('доступные варианты:', prepods_to_confirm)
                 prepod_id = int(input('введите id преподавателя для установки логина (или 0 для выхода):'))
                 if prepod_id in prepods_to_confirm:
+                    db = DataBase()
                     db.confirmLoginToPrepod(prepod_id)
+                    print('Преподаватель добавлен. Предмет добавлен.')
                 elif type == 0:
                     break
                 else:

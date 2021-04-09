@@ -1,7 +1,7 @@
 #from univ_fuctions.pswrd import *
-#from univ_fuctions.cl import *
-# from univ_fuctions.prepod import *
-# from univ_fuctions.student import *
+from univ_fuctions.cl import *
+from univ_fuctions.prepod import *
+from univ_fuctions.student import *
 from univ_fuctions.reg import *
 
 def menu_studenta(login):
@@ -9,13 +9,11 @@ def menu_studenta(login):
         db = DataBase()
         data = db.student_info_o_sebe(login)
         return data
-
     data = d()
     for element in data:
         id = element["id"]
     while True:
-        print(
-            '1 - информация о себе\n2 - средний балл\n3 - номер группы\n4 - фио\n5 - информация о предметах\n9 - изменить пароль\n0 - выход')
+        print('1 - информация о себе\n2 - средний балл\n3 - номер группы\n4 - фио\n5 - информация о предметах\n9 - изменить пароль\n0 - выход')
         type = int(input('Сделайте выбор (или 0 для выхода):'))
         if type == 1:
             print('информация о', login, ':')
@@ -73,8 +71,7 @@ def menu_studenta(login):
 
 def menu_prepoda(login):
     while True:
-        print(
-            '1 - информация о студентах\n2 - получить информацию о студенте\n3 - добавить студента\n4 - добавить преподавателя\n5 - поставить оценку\n6 - изменить оценку\n0 - выход')
+        print('1 - информация о студентах\n2 - получить информацию о студенте\n3 - добавить студента\n4 - добавить преподавателя\n5 - поставить оценку\n6 - изменить оценку\n0 - выход')
         type = int(input('Сделайте выбор (или 0 для выхода):'))
         if type == 1:
             print('информация о студентах')
@@ -176,8 +173,7 @@ def prep_add_student():
     db = DataBase()
     db.addUserStudent(student_login, student_password, type, name, surname, fakultet, group_number)
     del db
-    print("студент <", name, surname, fakultet, group_number, student_login,
-          "> добавлен, установлен временный пароль: temp[login]")
+    print("студент <", name, surname, fakultet, group_number, student_login,"> добавлен, установлен временный пароль: temp[login]")
 
 
 def main():
@@ -193,25 +189,24 @@ def main():
             db = DataBase()
             logins = db.getUser()
             del db
-            logins_list = []
-            for element in logins:
-                logins_list.append(element["login"])
-            if login in logins_list:
-                db = DataBase()
-                data = db.getPassword(login=login)
-                del db
-                for element in data:
-                    pass
-                    # print(element["password"])
-                if password == deshifr_pswrd(element["password"]):
-                    print("...Авторизация прошла успешно,", element["name"], hide_password(password))
-                    if element["type"] == "s":
-                        menu_studenta(login=login)
-                    else:
-                        menu_prepoda(login=login)
+            #logins_list = []
+            ##    logins_list.append(element["login"])
+            #if login in logins_list:
+            db = DataBase()
+            data = db.getPassword(login=login)
+            del db
+            for element in data:
+                pass
+                print(element["password"])
+            if password == deshifr_pswrd(element["password"]):
+                print("...Авторизация прошла успешно,", element["name"], hide_password(password))
+                if element["type"] == "s":
+                    menu_studenta(login=login)
                 else:
-                    print("введен неверный логин или пароль")
-            else: print('нет такого логина. Вы зарегистрированы?')
+                    menu_prepoda(login=login)
+            else:
+                print("введен неверный логин или пароль")
+            #else: print('нет такого логина. Вы зарегистрированы?')
         elif type == 2:
             print('Регистрация. Введите запрашиваемые данные:')
             register()
