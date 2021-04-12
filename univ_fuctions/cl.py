@@ -19,7 +19,7 @@ class DataBase:
 
     def __del__(self):
         self.connection.close()
-        print('connection closed')
+        #print('connection closed')
 
     def addUserStudent(self, login, password, type, name, surname, fakultet, group_number):
         sql = "INSERT INTO usrs (id, login, password, type, name, surname, fakultet, group_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
@@ -50,16 +50,22 @@ class DataBase:
         return data
 
     def confirmLoginToPrepod(self, id):
+        sql = "SELECT predmet FROM usrs WHERE id = %s"
+        self.cursors.execute(sql, [id])
+        data = self.cursors.fetchall()
+        print(data)
+        for element in data:
+            name_predmet = (element["predmet"]).replace(' ', '_')
         login = "prep"+str(id)
         sql = "UPDATE usrs SET login = %s WHERE id = %s"
         temp = [login, id]
         self.cursors.execute(sql, temp)
         #creating tables
-        sql1 = "ALTER TABLE marks ADD COLUMN " + login + "_1 INT (2)"
-        sql2 = "ALTER TABLE marks ADD COLUMN " + login + "_2 INT (2)"
-        sql3 = "ALTER TABLE marks ADD COLUMN " + login + "_3 INT (2)"
-        sql4 = "ALTER TABLE marks ADD COLUMN " + login + "_kurs INT (2)"
-        sql5 = "ALTER TABLE marks ADD COLUMN " + login + "_ekzamen INT (2)"
+        sql1 = "ALTER TABLE marks ADD COLUMN " + name_predmet + "_1 INT (2)"
+        sql2 = "ALTER TABLE marks ADD COLUMN " + name_predmet + "_2 INT (2)"
+        sql3 = "ALTER TABLE marks ADD COLUMN " + name_predmet + "_3 INT (2)"
+        sql4 = "ALTER TABLE marks ADD COLUMN " + name_predmet + "_курсовая INT (2)"
+        sql5 = "ALTER TABLE marks ADD COLUMN " + name_predmet + "_экзамен INT (2)"
         self.cursors.execute(sql1)
         self.cursors.execute(sql2)
         self.cursors.execute(sql3)

@@ -16,10 +16,10 @@ def menu_studenta(login):
         print('1 - информация о себе\n2 - средний балл\n3 - номер группы\n4 - фио\n5 - информация о предметах\n9 - изменить пароль\n0 - выход')
         type = int(input('Сделайте выбор (или 0 для выхода):'))
         if type == 1:
-            print('информация о', login, ':')
+            print('информация о пользователе '+login+':')
             # data = d()
             for element in data:
-                print(element["id"], element["name"], element["surname"], element["fakultet"], element["group_number"])
+                print(' id:', element["id"], '\n имя:', element["name"], '\n фамилия:', element["surname"], '\n факультет:', element["fakultet"], '\n номер группы:', element["group_number"])
         elif type == 2:
             print('средний балл')
             db = DataBase()
@@ -34,25 +34,23 @@ def menu_studenta(login):
                         sum_ball += int(data[key])
                         cnt += 1
             if cnt > 0:
-                print('средний балл=', sum_ball / cnt)
-            else: print('ни одной оценки не поставлено.')
+                print('средний балл:', sum_ball / cnt, '(всего получено оценок:', cnt,')')
+            else: print('Средний балл нельзя посчитать, ни одной оценки не поставлено.')
         elif type == 3:
-            print('номер группы')
             data = d()
             for element in data:
-                print(element["group_number"])
+                print('номер группы:', element["group_number"])
         elif type == 4:
-            print('фио')
             # data = d()
             for element in data:
-                print(element["name"], element["surname"])
+                print('фамилия и имя:', element["name"], element["surname"])
         elif type == 5:
-            print('информация о предметах:')
+            print('информация о предметах (название: преподаватель: факультет)')
             db = DataBase()
             data = db.info_predmety()
             del db
             for element in data:
-                print(element["predmet"],":", element["name"], element["surname"], ", факультет: ", element["fakultet"])
+                print(element["predmet"],":", element["name"], element["surname"], ", факультет:", element["fakultet"])
         elif type == 9:
             print('изменить пароль', login)
             new_password = shifr_pswrd(input('введите новый пароль (или 0 для выхода):'))
@@ -79,7 +77,7 @@ def menu_prepoda(login):
             data = db.getUser()
             del db
             for element in data:
-                print(element["id"], element["name"], element["surname"], element["fakultet"], element["group_number"])
+                print(' id:', element["id"],'| имя и фамилия:', element["name"], element["surname"],'| факультет:', element["fakultet"],'| номер группы:', element["group_number"])
         elif type == 2:
             students = []
             db = DataBase()
@@ -94,13 +92,12 @@ def menu_prepoda(login):
                 data, data2 = db.infoStudent(id)
                 del db
                 for element in data:
-                    print(element["name"], element["surname"], element["fakultet"],
-                          element["group_number"])
+                    print(' имя:',element["name"],'\n фамилия:', element["surname"],'\n факультет:', element["fakultet"], '\n номер группы:', element["group_number"])
                 data2 = data2[0]
                 for key in data2:
                     if data2[key] == None:
                         data2[key] = 'б/о'
-                    print(key, ":", data2[key])
+                    print(key.replace('_', ' '), ":", data2[key])
             else:
                 print('студента с таким id в базе нет')
         elif type == 3:
@@ -115,7 +112,7 @@ def menu_prepoda(login):
             print(len(data), "преподавателя(ей) можно добавить в БД:")
             if len(data) > 0:
                 for element in data:
-                    print(element["id"], element["name"], element["fakultet"], element["predmet"])
+                    print(' id:',element["id"], ' имя:',element["name"], ' факультет:',element["fakultet"], ' предмет:',element["predmet"])
                     prepods_to_confirm.append(element["id"])
                 print('доступные варианты:', prepods_to_confirm)
                 prepod_id = int(input('введите id преподавателя для установки логина (или 0 для выхода):'))

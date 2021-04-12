@@ -30,6 +30,7 @@ def reg_prepod():
     print("преподаватель", name, surname, fakultet, predmet, "добавлен.\nПосле проверки логин установит главный преподаватель.")
 
 
+
 def register():
     while True:
         member = input('введите данные: 1 - студент, 2 - преподаватель (или 0 для выхода):')
